@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket ChatRoom</title>
+</head>
+<body>
+<h1>WebSocket ChatRoom</h1>
+<input type="text" id="sendTxt">
+<button id="sendBtn">Send</button>
+<div id="recv"></div>
+<script>
+  let webSocket = new WebSocket('ws://localhost:8001/')
+
+  function showMessage(str) {
+    let div = document.createElement('div')
+    div.innerHTML = str
+    document.body.appendChild(div)
+  }
+
+  webSocket.onopen = function () {
+    console.log('webSocket open')
+    document.getElementById('recv').innerHTML = 'Connected'
+    document.getElementById('sendBtn').onclick = function () {
+      let txt = document.getElementById('sendTxt').value
+      if (txt) webSocket.send(txt)
+    }
+  }
+  webSocket.onclose = function () {
+    console.log('webSocket close')
+    document.getElementById('recv').innerHTML = 'Closed'
+  }
+  webSocket.onmessage = function (e) {
+    console.log(e.data)
+    showMessage(e.data)
+//    document.getElementById('recv').innerHTML = e.data
+  }
+
+</script>
+</body>
+</html>
